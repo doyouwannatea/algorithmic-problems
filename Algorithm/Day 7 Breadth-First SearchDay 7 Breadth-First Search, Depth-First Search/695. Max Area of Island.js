@@ -10,7 +10,7 @@ function maxAreaOfIsland(grid) {
   for (let r = 0; r < h; r++) {
     for (let c = 0; c < w; c++) {
       if (grid[r][c] === 1) {
-        maxArea = Math.max(maxArea, areaOfIsland(grid, r, c));
+        maxArea = Math.max(maxArea, trav(grid, r, c));
       }
     }
   }
@@ -21,38 +21,27 @@ function maxAreaOfIsland(grid) {
 /**
  *
  * @param {number[][]} grid
- * @param {number} row
- * @param {number} col
+ * @param {number} i
+ * @param {number} j
  * @returns {number}
  */
-function areaOfIsland(grid, row, col) {
-  const w = grid[0].length;
-  const h = grid.length;
-  const queue = [[row, col]];
-  grid[row][col] = -1;
-  let area = 1;
-
-  while (queue.length > 0) {
-    const [r, c] = queue.pop();
-
-    const neighbors = [
-      r > 0 && [r - 1, c],
-      r < h - 1 && [r + 1, c],
-      c > 0 && [r, c - 1],
-      c < w - 1 && [r, c + 1],
-    ].filter(Boolean);
-
-    for (const point of neighbors) {
-      const [r, c] = point;
-      if (grid[r][c] === 1) {
-        area += 1;
-        queue.push([r, c]);
-        grid[r][c] = -1;
-      }
-    }
-  }
-
-  return area;
+function trav(grid, i, j) {
+  if (
+    i < 0 ||
+    j < 0 ||
+    i > grid.length - 1 ||
+    j > grid[0].length - 1 ||
+    !grid[i][j]
+  )
+    return 0;
+  grid[i][j] = 0;
+  return (
+    1 +
+    trav(grid, i + 1, j) +
+    trav(grid, i - 1, j) +
+    trav(grid, i, j + 1) +
+    trav(grid, i, j - 1)
+  );
 }
 
 // 6
