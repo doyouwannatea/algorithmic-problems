@@ -19,37 +19,79 @@ class TreeNode {
  * @return {number}
  */
 function minDepth(root) {
-  const forks = [{ node: root, depth: 1 }];
-  let minDepth = Number.MAX_SAFE_INTEGER;
+  // --- Решение через рексурсию ---
+  // function dfs(node, depth = 0) {
+  //   if (!node) return Number.MAX_SAFE_INTEGER;
+  //   if (!node.left && !node.right) return depth;
+  //   return Math.min(dfs(node.left, depth + 1), dfs(node.right, depth + 1));
+  // }
+  // if (!root) return 0;
+  // return dfs(root, 1);
+  // --- Решение через рексурсию ---
+  //
+  // --- Решение через циклы ---
+  if (!root) return 0;
+  const stack = [root];
+  root.val = 1;
+  let depth = Number.MAX_SAFE_INTEGER;
 
-  while (forks.length > 0) {
-    const rootNode = forks.pop();
-    let node = rootNode;
-    let depth = node.depth;
-
-    while (node.node && node.node.left) {
-      depth++;
-      node = { node: node.node.left, depth };
-      if (node.node.right) forks.push(node);
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node.left && !node.right) {
+      depth = Math.min(depth, node.val);
+      continue;
     }
-    if (depth < minDepth) minDepth = depth;
-
-    node = rootNode;
-    while (node.node && node.node.right) {
-      depth++;
-      node = { node: node.node.right, depth };
-      if (node.node.left) forks.push(node);
+    if (node.right) {
+      node.right.val = node.val + 1;
+      stack.push(node.right);
     }
-    if (depth < minDepth) minDepth = depth;
+    if (node.left) {
+      node.left.val = node.val + 1;
+      stack.push(node.left);
+    }
   }
-  return minDepth;
+
+  return depth;
+  // --- Решение через циклы ---
 }
 
-const root = new TreeNode(
-  3,
-  new TreeNode(9),
-  new TreeNode(20, new TreeNode(15), new TreeNode(7))
+// [3,9,20,null,null,15,7]
+//     3
+//  9     20
+//      15  7
+
+// answer: 2
+console.log(
+  minDepth(
+    new TreeNode(
+      3,
+      new TreeNode(9),
+      new TreeNode(20, new TreeNode(15), new TreeNode(7))
+    )
+  )
 );
 
-// 2
-console.log(minDepth(root));
+// input: [2,null,3,null,4,null,5,null,6]
+//
+// tree:
+//    2
+// null 3
+//   null 4
+//     null 5
+//       null 6
+//
+// answer: 5
+//
+console.log(
+  minDepth(
+    new TreeNode(
+      2,
+      null,
+      new TreeNode(
+        3,
+        null,
+        new TreeNode(4, null, new TreeNode(5, null, new TreeNode(6)))
+      )
+    )
+  )
+);
