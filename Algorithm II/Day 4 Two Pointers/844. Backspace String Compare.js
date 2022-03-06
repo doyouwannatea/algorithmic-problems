@@ -4,31 +4,35 @@
  * @return {boolean}
  */
 function backspaceCompare(s, t) {
-  let i = 0,
-    j = 0;
-  const ltrsA = [];
-  const ltrsB = [];
-  while (i < s.length || j < t.length) {
-    if (i < s.length) {
-      while (s[i] === '#') {
-        ltrsA.pop();
-        i++;
-      }
-      ltrsA.push(s[i]);
-      i++;
+  let i = s.length - 1,
+    j = t.length - 1;
+  let skipS = '',
+    skipT = '';
+
+  while (i >= 0 || j >= 0) {
+    while (i >= 0) {
+        if (s[i] === '#') { i--; skipS++ }
+        else if (skipS > 0) { i--; skipS-- }
+        else break
+    }
+    while (j >= 0) {
+        if (t[j] === '#') { j--; skipT++ }
+        else if (skipT > 0) { j--; skipT-- }
+        else break
     }
 
-    if (j < t.length) {
-      while (t[j] === '#') {
-        ltrsB.pop();
-        j++;
-      }
-      ltrsB.push(t[j]);
-      j++;
+    if (i >= 0 && j >= 0 && s[i] !== t[j]) {
+        return false
     }
+
+    if (i < 0 ^ j < 0) {
+        return false
+    }
+    
+    i--; j--;
   }
 
-  return ltrsA.join('') === ltrsB.join('');
+  return true
 }
 
 // Output: true
@@ -42,3 +46,6 @@ console.log(backspaceCompare('a#c', 'b'));
 
 // Output: false
 console.log(backspaceCompare('xywrrmp', 'xywrrm#p'));
+
+// Output: true
+console.log(backspaceCompare('xywrrmp', 'xywrrmu#p'));
