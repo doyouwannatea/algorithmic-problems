@@ -7,33 +7,19 @@ const testcase42 = require('./713. test-42.json');
  * @return {number}
  */
 function numSubarrayProductLessThanK(nums, k) {
-  let l = 0,
-    r = 0,
-    count = 0;
+  let left = 0,
+    right = 0;
+  let prod = 1,
+    res = 0;
 
-  const hash = new Map();
-
-  while (l >= 0 || r < nums.length) {
-    while (r < nums.length) {
-      if (l === r) hash.set(l + r - 1, 1);
-      hash.set(l + r, hash.get(l + r - 1) * nums[r]);
-      if (hash.get(l + r) < k) count++;
-      l++;
-      r++;
-    }
-    l -= 2;
-    r -= 1;
-    while (l >= 0) {
-      hash.set(l + r, hash.get(l + r + 1) * nums[l]);
-      if (hash.get(l + r) < k) count++;
-      r--;
-      l--;
-    }
-    l += 1;
-    r += 2;
+  while (right < nums.length) {
+    if (k <= 1) return 0;
+    prod *= nums[right];
+    while (prod >= k) prod /= nums[left++];
+    res += right - left + 1;
+    right++;
   }
-
-  return count;
+  return res;
 }
 
 // [10], [5], [2], [6], [10, 5], [5, 2], [2, 6], [5, 2, 6]
@@ -41,10 +27,10 @@ function numSubarrayProductLessThanK(nums, k) {
 console.log(numSubarrayProductLessThanK([10, 5, 2, 6], 100));
 
 // Output: 0
-// console.log(numSubarrayProductLessThanK([1, 2, 3], 0));
+console.log(numSubarrayProductLessThanK([1, 2, 3], 0));
 
-// Output: ?
-// console.log(numSubarrayProductLessThanK(testcase35.nums, testcase35.k));
+// Output: 27168
+console.log(numSubarrayProductLessThanK(testcase35.nums, testcase35.k));
 
-// Output: ?
+// Output: 27040
 console.log(numSubarrayProductLessThanK(testcase42.nums, testcase42.k));
