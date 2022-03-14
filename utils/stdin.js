@@ -1,6 +1,9 @@
 const readline = require('readline');
 
 /**
+ * отправить file.txt в stdin: cat stdin.txt | node script.js
+ *
+ * отправить file.txt в stdin а затем результат в stdout: cat stdin.txt | node script.js > stdout.txt
  * @param {(lines: string[]) => void} cb
  */
 function readStdin(cb) {
@@ -14,17 +17,6 @@ function readStdin(cb) {
   rl.on('close', () => cb(lines));
 }
 
-readStdin((lines) => {
-  // пример использования
-  const grid = lines.map((row) => row.split(' ').map(Number));
-  findIslandArea(grid);
-});
-
-/**
- * @param {number[][]} grid
- * @returns {number}
- */
-function findIslandArea(grid) {
-  console.log(grid);
-  return 0;
-}
+module.exports = {
+  readStdin,
+};
