@@ -31,10 +31,9 @@ function func(s, t1, t2) {
       variant.push(currS);
       findRed(variant, currRed + 1, currS + 1);
       variant.pop();
-      findRed(variant, currRed, currS + 1);
-    } else {
-      findRed(variant, currRed, currS + 1);
     }
+
+    findRed(variant, currRed, currS + 1);
   }
 
   findRed([], 0, 0);
